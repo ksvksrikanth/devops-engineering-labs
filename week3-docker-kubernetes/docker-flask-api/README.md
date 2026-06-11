@@ -57,10 +57,7 @@ This Flask API project has two GitHub Actions workflows in the repository `.gith
 
 Purpose: validates that the Docker image can be built successfully and that the Flask API starts correctly.
 
-This workflow runs on:
-
-- Push to the `main` branch
-- Pull requests targeting the `main` branch
+This workflow runs manually from the GitHub Actions tab using `workflow_dispatch`.
 
 It performs these steps:
 
@@ -76,9 +73,7 @@ It performs these steps:
 
 Purpose: builds the Flask API Docker image and pushes it to Amazon ECR.
 
-This workflow runs on:
-
-- Push to the `main` branch
+This workflow runs manually from the GitHub Actions tab using `workflow_dispatch`.
 
 It performs these steps:
 

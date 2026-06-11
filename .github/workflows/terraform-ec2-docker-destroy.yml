@@ -1,0 +1,69 @@
+name: Terraform EC2 Docker Destroy
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply_run_id:
+        description: "Workflow run ID from the Terraform EC2 Docker Apply run"
+        required: true
+        type: string
+      key_name:
+        description: "Existing AWS EC2 key pair name used during apply"
+        required: true
+        type: string
+      allowed_ssh_cidr:
+        description: "Your public IP in CIDR format used during apply, example: 1.2.3.4/32"
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: ap-south-1
+  TERRAFORM_WORKING_DIR: week2-terraform-ansible/terraform-ec2-docker
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  terraform-destroy:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v4
+
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Download Terraform state from apply workflow
+        uses: actions/download-artifact@v8
+        with:
+          name: terraform-ec2-docker-state
+          run-id: ${{ inputs.apply_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ env.TERRAFORM_WORKING_DIR }}
+
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform destroy plan
+        run: |
+          terraform plan -destroy \
+            -out=tfdestroyplan \
+            -var="key_name=${{ inputs.key_name }}" \
+            -var="allowed_ssh_cidr=${{ inputs.allowed_ssh_cidr }}"
+
+      - name: Terraform destroy
+        run: terraform apply -auto-approve tfdestroyplan

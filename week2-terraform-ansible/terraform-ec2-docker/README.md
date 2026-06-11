@@ -94,41 +94,33 @@ terraform destroy -var="key_name=YOUR_KEY_PAIR" -var="allowed_ssh_cidr=YOUR_PUBL
 
 Understand: deletes the EC2 instance and security group to avoid unnecessary AWS cost.
 
-## GitHub Actions Workflow
+## GitHub Actions Workflows
 
-The repository includes `.github/workflows/terraform-ec2-docker.yml`.
+The repository includes two Terraform GitHub Actions workflows:
 
-Purpose: checks the Terraform code for this lab and runs a manual create-test-destroy lab flow using AWS OIDC.
+- `.github/workflows/terraform-ec2-docker.yml`
+- `.github/workflows/terraform-ec2-docker-destroy.yml`
 
-The workflow runs automatically on changes to this folder and performs:
+Both workflows run manually from the GitHub Actions tab using `workflow_dispatch`.
 
-- `terraform fmt -check`
-- `terraform init`
-- `terraform validate`
+### Apply Workflow
 
-The workflow can also be started manually with `workflow_dispatch`.
+Use `Terraform EC2 Docker Apply` to create the EC2 instance.
 
-Required manual inputs:
-
-- `key_name`: existing AWS EC2 key pair name
-- `allowed_ssh_cidr`: your public IP in CIDR format, for example `1.2.3.4/32`
-
-### Manual Create, Deploy, and Destroy Flow
-
-When started manually, the workflow runs sequentially:
+When started, it performs:
 
 - `terraform fmt -check`
 - `terraform init`
 - `terraform validate`
 - `terraform plan -out=tfplan`
-- `terraform apply -auto-approve`
-- Uploads `terraform.tfstate` as a short-lived workflow artifact
+- `terraform apply -auto-approve tfplan`
+- Uploads `terraform.tfstate` as a workflow artifact named `terraform-ec2-docker-state`
 - Prints the EC2 public IP, app URL, and SSH command in the workflow logs
-- Waits at the `manual-approval` job before destroy
-- `terraform plan -destroy -out=tfdestroyplan`
-- `terraform apply -auto-approve tfdestroyplan` after approval
 
-The apply job uses the saved `tfplan` file created by the plan job. The destroy job creates a separate destroy plan because Terraform cannot use a normal create/update plan file to destroy resources.
+Required manual inputs:
+
+- `key_name`: existing AWS EC2 key pair name
+- `allowed_ssh_cidr`: your public IP in CIDR format, for example `1.2.3.4/32`
 
 After the apply job completes, connect to EC2 and deploy the Flask API container:
 
@@ -138,15 +130,39 @@ docker pull YOUR_ECR_REPOSITORY_URI:latest
 docker run -d --name flask-api -p 5000:5000 YOUR_ECR_REPOSITORY_URI:latest
 ```
 
-Open the app URL from the workflow logs to test the API. When testing is complete, approve the `manual-approval` job in GitHub Actions. After that approval, the `terraform-destroy` job will run.
+Open the app URL from the workflow logs to test the API.
 
-Important: to make the workflow pause before destroy, create a GitHub Environment named `ec2-docker-manual-deploy` and configure required reviewers:
+### Destroy Workflow
 
-1. Go to repository `Settings`.
-2. Open `Environments`.
-3. Create `ec2-docker-manual-deploy`.
-4. Add yourself as a required reviewer.
+Use `Terraform EC2 Docker Destroy` only after you finish testing the container.
 
-If this environment is not protected with a required reviewer, GitHub Actions will not pause. The `manual-approval` job will finish immediately, and the `terraform-destroy` job will run right after apply.
+When started, it performs:
+
+- Downloads the `terraform-ec2-docker-state` artifact from the apply workflow run
+- `terraform init`
+- `terraform plan -destroy -out=tfdestroyplan`
+- `terraform apply -auto-approve tfdestroyplan`
+
+Required manual inputs:
+
+- `apply_run_id`: the workflow run ID from the successful `Terraform EC2 Docker Apply` run
+- `key_name`: the same EC2 key pair name used during apply
+- `allowed_ssh_cidr`: the same CIDR value used during apply
+
+To find the apply run ID, open the successful apply workflow run in GitHub Actions and copy the number from the URL.
+
+Example URL:
+
+```text
+https://github.com/OWNER/REPOSITORY/actions/runs/1234567890
+```
+
+In this example, the `apply_run_id` is:
+
+```text
+1234567890
+```
+
+The Terraform state artifact is retained for 7 days. Run the destroy workflow before the artifact expires.
 
 For production, store Terraform state in a remote backend such as S3 with DynamoDB locking. This lab uses a workflow artifact for state only to keep the exercise simple.
