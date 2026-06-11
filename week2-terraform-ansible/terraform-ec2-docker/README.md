@@ -98,7 +98,7 @@ Understand: deletes the EC2 instance and security group to avoid unnecessary AWS
 
 The repository includes `.github/workflows/terraform-ec2-docker.yml`.
 
-Purpose: checks the Terraform code for this lab, can run a manual Terraform plan, and can run a full create-test-destroy lab flow using AWS OIDC.
+Purpose: checks the Terraform code for this lab and runs a manual create-test-destroy lab flow using AWS OIDC.
 
 The workflow runs automatically on changes to this folder and performs:
 
@@ -108,30 +108,27 @@ The workflow runs automatically on changes to this folder and performs:
 
 The workflow can also be started manually with `workflow_dispatch`.
 
-### Manual Plan Mode
-
-Use mode `plan` to preview the EC2 resources from GitHub Actions.
-
-This mode runs:
-
-- `terraform plan`
-
-Required inputs:
+Required manual inputs:
 
 - `key_name`: existing AWS EC2 key pair name
 - `allowed_ssh_cidr`: your public IP in CIDR format, for example `1.2.3.4/32`
 
-### Manual Apply and Destroy Mode
+### Manual Create, Deploy, and Destroy Flow
 
-Use mode `apply_destroy` to create the EC2 instance, pause while you deploy the Docker container, and then destroy the resources after you approve the final job.
+When started manually, the workflow runs sequentially:
 
-This mode runs:
-
+- `terraform fmt -check`
+- `terraform init`
+- `terraform validate`
+- `terraform plan -out=tfplan`
 - `terraform apply -auto-approve`
 - Uploads `terraform.tfstate` as a short-lived workflow artifact
 - Prints the EC2 public IP, app URL, and SSH command in the workflow logs
 - Waits at the `ec2-docker-manual-deploy` GitHub Environment before destroy
-- `terraform destroy -auto-approve` after approval
+- `terraform plan -destroy -out=tfdestroyplan`
+- `terraform apply -auto-approve tfdestroyplan` after approval
+
+The apply job uses the saved `tfplan` file created by the plan job. The destroy job creates a separate destroy plan because Terraform cannot use a normal create/update plan file to destroy resources.
 
 After the apply job completes, connect to EC2 and deploy the Flask API container:
 
