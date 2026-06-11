@@ -124,7 +124,7 @@ When started manually, the workflow runs sequentially:
 - `terraform apply -auto-approve`
 - Uploads `terraform.tfstate` as a short-lived workflow artifact
 - Prints the EC2 public IP, app URL, and SSH command in the workflow logs
-- Waits at the `ec2-docker-manual-deploy` GitHub Environment before destroy
+- Waits at the `manual-approval` job before destroy
 - `terraform plan -destroy -out=tfdestroyplan`
 - `terraform apply -auto-approve tfdestroyplan` after approval
 
@@ -138,7 +138,7 @@ docker pull YOUR_ECR_REPOSITORY_URI:latest
 docker run -d --name flask-api -p 5000:5000 YOUR_ECR_REPOSITORY_URI:latest
 ```
 
-Open the app URL from the workflow logs to test the API. When testing is complete, approve the `terraform-destroy` job in GitHub Actions.
+Open the app URL from the workflow logs to test the API. When testing is complete, approve the `manual-approval` job in GitHub Actions. After that approval, the `terraform-destroy` job will run.
 
 Important: to make the workflow pause before destroy, create a GitHub Environment named `ec2-docker-manual-deploy` and configure required reviewers:
 
@@ -147,6 +147,6 @@ Important: to make the workflow pause before destroy, create a GitHub Environmen
 3. Create `ec2-docker-manual-deploy`.
 4. Add yourself as a required reviewer.
 
-If this environment is not protected with a required reviewer, GitHub Actions will not pause and the destroy job may run immediately after apply.
+If this environment is not protected with a required reviewer, GitHub Actions will not pause. The `manual-approval` job will finish immediately, and the `terraform-destroy` job will run right after apply.
 
 For production, store Terraform state in a remote backend such as S3 with DynamoDB locking. This lab uses a workflow artifact for state only to keep the exercise simple.
