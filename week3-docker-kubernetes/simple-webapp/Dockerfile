@@ -1,0 +1,12 @@
+FROM ubuntu
+
+RUN apt-get update && \
+    apt-get install -y python3-flask
+
+COPY app.py /opt/app.py
+
+ENV FLASK_APP=/opt/app.py
+
+EXPOSE 5000
+
+ENTRYPOINT ["flask", "run", "--host=0.0.0.0"]
