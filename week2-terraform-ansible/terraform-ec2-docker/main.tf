@@ -22,7 +22,7 @@ data "aws_ami" "ubuntu" {
 }
 
 resource "aws_security_group" "docker_lab_sg" {
-  name        = "docker-lab-sg"
+  name        = "${var.name_prefix}-sg"
   description = "Allow SSH and Docker app traffic"
 
   ingress {
@@ -49,14 +49,42 @@ resource "aws_security_group" "docker_lab_sg" {
   }
 }
 
+resource "aws_iam_role" "docker_lab_role" {
+  name = "${var.name_prefix}-ec2-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "docker_lab_ecr_readonly" {
+  role       = aws_iam_role.docker_lab_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+}
+
+resource "aws_iam_instance_profile" "docker_lab_profile" {
+  name = "${var.name_prefix}-ec2-profile"
+  role = aws_iam_role.docker_lab_role.name
+}
+
 resource "aws_instance" "docker_lab" {
   ami                    = data.aws_ami.ubuntu.id
   instance_type          = "t3.micro"
+  iam_instance_profile   = aws_iam_instance_profile.docker_lab_profile.name
   key_name               = var.key_name
   vpc_security_group_ids = [aws_security_group.docker_lab_sg.id]
   user_data              = file("user_data.sh")
 
   tags = {
-    Name = "docker-lab-ec2"
+    Name = "${var.name_prefix}-ec2"
   }
 }

@@ -47,7 +47,7 @@ Understand: checks whether the Terraform syntax and provider configuration are v
 Preview the AWS resources:
 
 ```bash
-terraform plan -var="key_name=YOUR_KEY_PAIR" -var="allowed_ssh_cidr=YOUR_PUBLIC_IP/32"
+terraform plan -var="name_prefix=docker-lab-test" -var="key_name=YOUR_KEY_PAIR" -var="allowed_ssh_cidr=YOUR_PUBLIC_IP/32"
 ```
 
 Understand: shows what Terraform will create before it actually changes AWS.
@@ -55,7 +55,7 @@ Understand: shows what Terraform will create before it actually changes AWS.
 Create the EC2 instance and security group:
 
 ```bash
-terraform apply -var="key_name=YOUR_KEY_PAIR" -var="allowed_ssh_cidr=YOUR_PUBLIC_IP/32"
+terraform apply -var="name_prefix=docker-lab-test" -var="key_name=YOUR_KEY_PAIR" -var="allowed_ssh_cidr=YOUR_PUBLIC_IP/32"
 ```
 
 Understand: creates the EC2 instance and security group in AWS.
@@ -80,16 +80,19 @@ Understand: confirms Docker is installed and the Docker daemon is running.
 ## Deploy Container on Terraform-created EC2
 
 ```bash
-docker pull YOUR_ECR_REPOSITORY_URI:latest
-docker run -d --name flask-api -p 5000:5000 YOUR_ECR_REPOSITORY_URI:latest
+aws ecr get-login-password --region ap-south-1 | sudo docker login --username AWS --password-stdin 720643158823.dkr.ecr.ap-south-1.amazonaws.com
+sudo docker pull YOUR_ECR_REPOSITORY_URI:latest
+sudo docker run -d --name flask-api -p 5000:5000 YOUR_ECR_REPOSITORY_URI:latest
 ```
 
 Understand: pulls your image from ECR and runs it on EC2 with port mapping for browser access.
 
+Important: the ECR login username must be `AWS`. Do not use your IAM username. The EC2 instance gets ECR pull permissions from the IAM role created by Terraform.
+
 ## Destroy After Testing
 
 ```bash
-terraform destroy -var="key_name=YOUR_KEY_PAIR" -var="allowed_ssh_cidr=YOUR_PUBLIC_IP/32"
+terraform destroy -var="name_prefix=docker-lab-test" -var="key_name=YOUR_KEY_PAIR" -var="allowed_ssh_cidr=YOUR_PUBLIC_IP/32"
 ```
 
 Understand: deletes the EC2 instance and security group to avoid unnecessary AWS cost.
@@ -122,12 +125,15 @@ Required manual inputs:
 - `key_name`: existing AWS EC2 key pair name
 - `allowed_ssh_cidr`: your public IP in CIDR format, for example `1.2.3.4/32`
 
+The workflow automatically uses `docker-lab-GITHUB_RUN_ID` as the Terraform `name_prefix`, so each apply run creates uniquely named AWS resources and avoids collisions with older lab resources.
+
 After the apply job completes, connect to EC2 and deploy the Flask API container:
 
 ```bash
 ssh -i your-key.pem ubuntu@EC2_PUBLIC_IP
-docker pull YOUR_ECR_REPOSITORY_URI:latest
-docker run -d --name flask-api -p 5000:5000 YOUR_ECR_REPOSITORY_URI:latest
+aws ecr get-login-password --region ap-south-1 | sudo docker login --username AWS --password-stdin 720643158823.dkr.ecr.ap-south-1.amazonaws.com
+sudo docker pull YOUR_ECR_REPOSITORY_URI:latest
+sudo docker run -d --name flask-api -p 5000:5000 YOUR_ECR_REPOSITORY_URI:latest
 ```
 
 Open the app URL from the workflow logs to test the API.
@@ -149,6 +155,8 @@ Required manual inputs:
 - `key_name`: the same EC2 key pair name used during apply
 - `allowed_ssh_cidr`: the same CIDR value used during apply
 
+The destroy workflow automatically uses `docker-lab-APPLY_RUN_ID` as the Terraform `name_prefix`, matching the names created by the apply workflow.
+
 To find the apply run ID, open the successful apply workflow run in GitHub Actions and copy the number from the URL.
 
 Example URL:
@@ -164,5 +172,7 @@ In this example, the `apply_run_id` is:
 ```
 
 The Terraform state artifact is retained for 7 days. Run the destroy workflow before the artifact expires.
+
+If an older apply failed before state was saved, AWS may still have leftover resources such as `docker-lab-sg`, `docker-lab-ec2-role`, or `docker-lab-ec2-profile`. Delete those old resources manually from AWS if they are no longer attached to an EC2 instance.
 
 For production, store Terraform state in a remote backend such as S3 with DynamoDB locking. This lab uses a workflow artifact for state only to keep the exercise simple.

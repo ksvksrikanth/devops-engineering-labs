@@ -74,6 +74,7 @@ jobs:
         run: |
           terraform plan \
             -out=tfplan \
+            -var="name_prefix=docker-lab-${{ github.run_id }}" \
             -var="key_name=${{ inputs.key_name }}" \
             -var="allowed_ssh_cidr=${{ inputs.allowed_ssh_cidr }}"
 

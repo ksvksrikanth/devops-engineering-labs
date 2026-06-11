@@ -62,6 +62,7 @@ jobs:
         run: |
           terraform plan -destroy \
             -out=tfdestroyplan \
+            -var="name_prefix=docker-lab-${{ inputs.apply_run_id }}" \
             -var="key_name=${{ inputs.key_name }}" \
             -var="allowed_ssh_cidr=${{ inputs.allowed_ssh_cidr }}"
 
