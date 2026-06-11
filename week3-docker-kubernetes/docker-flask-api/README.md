@@ -6,7 +6,7 @@
 - Terminal opened in this folder:
 
 ```powershell
-cd D:\DevOps-Learning\week3-docker-kubernetes\docker-flask-api
+cd <YOUR_DIRECTORY>\week3-docker-kubernetes\docker-flask-api
 ```
 
 ## Build the Docker Image
@@ -48,3 +48,45 @@ docker logs flask-api
 docker stop flask-api
 docker rm flask-api
 ```
+
+## GitHub Actions Workflows
+
+This Flask API project has two GitHub Actions workflows in the repository `.github/workflows` directory.
+
+### `flask-api-docker-build.yml`
+
+Purpose: validates that the Docker image can be built successfully and that the Flask API starts correctly.
+
+This workflow runs on:
+
+- Push to the `main` branch
+- Pull requests targeting the `main` branch
+
+It performs these steps:
+
+- Checks out the repository code
+- Sets up Docker Buildx
+- Builds the Docker image from `week3-docker-kubernetes/docker-flask-api`
+- Runs the container locally in GitHub Actions
+- Calls `http://localhost:5000/health` as a smoke test
+- Prints container logs
+- Stops and removes the test container
+
+### `flask-api-docker-build-aws.yml`
+
+Purpose: builds the Flask API Docker image and pushes it to Amazon ECR.
+
+This workflow runs on:
+
+- Push to the `main` branch
+
+It performs these steps:
+
+- Checks out the repository code
+- Authenticates to AWS using GitHub OIDC
+- Assumes the AWS IAM role `GitHubActionsDeployRole`
+- Logs in to Amazon ECR
+- Builds the Docker image from `week3-docker-kubernetes/docker-flask-api`
+- Tags the image with the Git commit SHA
+- Tags the image as `latest`
+- Pushes both tags to the `docker-flask-api` ECR repository in `ap-south-1`
