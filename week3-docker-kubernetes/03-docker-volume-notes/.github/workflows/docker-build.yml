@@ -1,0 +1,30 @@
+name: Docker Volume Notes Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-smoke-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t docker-volume-notes:${{ github.sha }} .
+
+      - name: Run smoke test with volume
+        run: |
+          docker volume create notes-data-test
+          docker run -d --name notes-api-test -p 5000:5000 -v notes-data-test:/data docker-volume-notes:${{ github.sha }}
+          sleep 5
+          curl --fail http://localhost:5000/health
+          curl -X POST http://localhost:5000/notes -H "Content-Type: application/json" -d '{"note":"github actions note"}'
+          curl --fail http://localhost:5000/notes
+          docker stop notes-api-test
+          docker rm notes-api-test
+          docker volume rm notes-data-test

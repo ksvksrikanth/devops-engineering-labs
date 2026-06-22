@@ -6,7 +6,7 @@
 - Terminal opened in this folder:
 
 ```powershell
-cd <YOUR_DIRECTORY>\week3-docker-kubernetes\docker-flask-api
+cd <YOUR_DIRECTORY>\week3-docker-kubernetes\01-docker-flask-api
 ```
 
 ## Build the Docker Image
@@ -63,7 +63,7 @@ It performs these steps:
 
 - Checks out the repository code
 - Sets up Docker Buildx
-- Builds the Docker image from `week3-docker-kubernetes/docker-flask-api`
+- Builds the Docker image from `week3-docker-kubernetes/01-docker-flask-api`
 - Runs the container locally in GitHub Actions
 - Calls `http://localhost:5000/health` as a smoke test
 - Prints container logs
@@ -81,7 +81,7 @@ It performs these steps:
 - Authenticates to AWS using GitHub OIDC
 - Assumes the AWS IAM role `GitHubActionsDeployRole`
 - Logs in to Amazon ECR
-- Builds the Docker image from `week3-docker-kubernetes/docker-flask-api`
+- Builds the Docker image from `week3-docker-kubernetes/01-docker-flask-api`
 - Tags the image with the Git commit SHA
 - Tags the image as `latest`
 - Pushes both tags to the `docker-flask-api` ECR repository in `ap-south-1`

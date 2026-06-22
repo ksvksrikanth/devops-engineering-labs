@@ -12,7 +12,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: week3-docker-kubernetes/docker-flask-api
+        working-directory: week3-docker-kubernetes/01-docker-flask-api
 
     steps:
       - name: Checkout code
