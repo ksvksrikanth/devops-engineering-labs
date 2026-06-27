@@ -1,14 +1,13 @@
 # Week 2: Terraform and Infrastructure as Code
 
-This folder is a hands-on Terraform learning portfolio that progresses from core Terraform syntax to EC2, load balancing, remote state, modules, custom networking, ECS Fargate, RDS, ECR, SSM Parameter Store, Secrets Manager, Vault, and CI/CD delivery.
-
-The examples were modernized from the Terraform folders in `D:\DdriveBackup\DevOps`, `D:\DdriveBackup\Technical & Soft\terraform\terraform`, and topics from `Terraform_Notes.pdf`. Generated files such as `.terraform`, `terraform.tfstate`, plans, local variable files, and private keys are intentionally excluded.
+This folder is a hands-on Terraform learning portfolio that progresses from core Terraform syntax to CLI practice, state troubleshooting, EC2, load balancing, remote state, modules, custom networking, ECS Fargate, RDS, ECR, SSM Parameter Store, Secrets Manager, Vault, and CI/CD delivery.
 
 ## Skills Demonstrated
 
 - Initializing Terraform projects with the AWS provider
 - Creating IAM, S3, VPC, EC2, EBS, DynamoDB, ECS, ECR, RDS, SSM, Secrets Manager, CodeBuild, CodePipeline, and load balancer resources
 - Using variables, validation, locals, outputs, lists, sets, maps, `count`, and `for_each`
+- Practicing `terraform fmt`, `show`, `console`, saved plans, state inspection, and error recovery
 - Rendering EC2 user data with `templatefile`
 - Reading AWS data sources such as AMIs, VPCs, subnets, availability zones, and caller identity
 - Creating reusable local modules for multiple environments
@@ -39,6 +38,7 @@ week2-terraform-ansible/
 |-- 05-codepipeline-ecr-ecs/
 |-- 06-vault-secrets-basics/
 |-- 07-aws-ssm-secrets-manager/
+|-- 08-terraform-cli-state-troubleshooting/
 |-- terraform-ec2-docker/
 `-- README.md
 ```
@@ -60,6 +60,8 @@ I checked `Terraform_Notes.pdf` and `TheTerraformBook_sample.pdf` against these 
 | Saved plans and graphing | `00-terraform-foundations/05-workspaces-plans-graph` |
 | State and remote backends | `02-state-and-modules/01-remote-state-backend` |
 | Workspaces | `00-terraform-foundations/05-workspaces-plans-graph` |
+| AWS access key safety and environment variables | `08-terraform-cli-state-troubleshooting` |
+| Terraform console, state inspection, error recovery, and FAQ | `08-terraform-cli-state-troubleshooting` |
 | Provisioner alternatives | EC2 labs use `user_data` instead of SSH provisioners |
 | Multi-tier application stack | `03-custom-vpc-ec2-ebs`, `04-ecs-fargate-rds-platform` |
 | Vault-backed secrets | `06-vault-secrets-basics` |
@@ -324,6 +326,36 @@ Learning focus:
 
 Cost note: Standard Parameter Store parameters are listed by AWS as no additional charge. Secrets Manager is priced per secret and API calls, though eligible new accounts may use AWS Free Tier credits.
 
+### 08 - Terraform CLI, State, and Troubleshooting
+
+Location: `08-terraform-cli-state-troubleshooting`
+
+Creates no AWS resources. This lab uses the built-in `terraform_data` resource to practice CLI commands, saved plans, `terraform show`, `terraform console`, state inspection, variable files, validation failures, and recovery workflows. It also documents safe AWS access-key handling without creating access keys in Terraform state.
+
+```powershell
+cd <YOUR_DIRECTORY>\week2-terraform-ansible\08-terraform-cli-state-troubleshooting
+terraform init
+terraform fmt
+terraform validate
+terraform plan -out=tfplan
+terraform show tfplan
+terraform apply tfplan
+terraform state list
+terraform state show terraform_data.cli_lab
+terraform console
+terraform destroy
+```
+
+Learning focus:
+
+- AWS credential environment variables and access-key safety
+- Desired, known, and actual state
+- Local state inspection with `terraform state`
+- `terraform console` expression practice
+- `terraform fmt`, `validate`, `show`, saved plans, and outputs
+- Common beginner error recovery
+- Terraform FAQ review
+
 ### Existing Lab - EC2 Docker Host
 
 Location: `terraform-ec2-docker`
@@ -387,6 +419,7 @@ Guardrails applied in these labs:
 - RDS is limited to `db.t3.micro` or `db.t4g.micro` and up to 20 GiB.
 - NAT Gateway is blocked because it is billed hourly and by data processed.
 - Vault and workspace/graph labs create no AWS resources.
+- CLI/state troubleshooting lab creates no AWS resources.
 - SSM Parameter Store lab defaults to Standard parameters only.
 - Secrets Manager resources are disabled by default.
 - `terraform.tfvars`, state files, plans, provider caches, and private keys are ignored.

@@ -1,0 +1,8 @@
+environment = "dev"
+service_names = ["web", "api", "worker", "scheduler"]
+
+common_tags = {
+  Repository = "DevOps-Learning"
+  Week       = "2"
+  Lab        = "terraform-cli-state-troubleshooting"
+}
