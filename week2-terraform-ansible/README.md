@@ -43,30 +43,6 @@ week2-terraform-ansible/
 `-- README.md
 ```
 
-## PDF Coverage Check
-
-I checked `Terraform_Notes.pdf` and `TheTerraformBook_sample.pdf` against these labs.
-
-| Topic from the PDFs | Covered by |
-| --- | --- |
-| First project, providers, resources, plan, apply, destroy | `00-terraform-foundations/01-iam-basic-resource` |
-| Variables, defaults, command-line values, complex types | `00-terraform-foundations/02-variables-count`, `00-terraform-foundations/03-lists-sets-maps` |
-| Data sources | EC2, ALB, ECS, and custom VPC labs |
-| Outputs and resource attributes | All AWS labs |
-| Locals | `00-terraform-foundations/04-s3-vpc-locals`, ECS platform lab |
-| Templates and files | `00-terraform-foundations/05-workspaces-plans-graph`, EC2 user-data labs |
-| Project layout | Grouped folder structure in this week |
-| Modules | `02-state-and-modules/02-modules-environments` |
-| Saved plans and graphing | `00-terraform-foundations/05-workspaces-plans-graph` |
-| State and remote backends | `02-state-and-modules/01-remote-state-backend` |
-| Workspaces | `00-terraform-foundations/05-workspaces-plans-graph` |
-| AWS access key safety and environment variables | `08-terraform-cli-state-troubleshooting` |
-| Terraform console, state inspection, error recovery, and FAQ | `08-terraform-cli-state-troubleshooting` |
-| Provisioner alternatives | EC2 labs use `user_data` instead of SSH provisioners |
-| Multi-tier application stack | `03-custom-vpc-ec2-ebs`, `04-ecs-fargate-rds-platform` |
-| Vault-backed secrets | `06-vault-secrets-basics` |
-| AWS Parameter Store and Secrets Manager | `07-aws-ssm-secrets-manager` |
-
 ## Projects
 
 ### 00 - Terraform Foundations
@@ -445,7 +421,7 @@ Strengths demonstrated by this portfolio:
 - Cleaner top-level layout with related labs grouped together
 - Clear progression from first resource to reusable modules and application platforms
 - Modern Terraform syntax and AWS provider 5.x-compatible resources
-- Missing PDF topics added through workspace, saved-plan, graph, and Vault labs
+- Additional CLI topics covered through workspace, saved-plan, graph, state, and Vault labs
 - Safer SSH access by requiring `YOUR_PUBLIC_IP/32`
 - Free-tier-oriented validations for EC2, EBS, RDS, and NAT Gateway avoidance
 - Remote backend preparation instead of committing state
