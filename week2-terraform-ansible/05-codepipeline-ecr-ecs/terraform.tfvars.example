@@ -1,0 +1,8 @@
+aws_region         = "ap-south-1"
+project_name       = "petclinic"
+source_repo_name   = "petclinic"
+source_repo_branch = "main"
+image_repo_name    = "petclinic"
+container_name     = "petclinic"
+ecs_cluster_name   = "terraform-workshop-cluster"
+ecs_service_name   = "terraform-workshop-service"

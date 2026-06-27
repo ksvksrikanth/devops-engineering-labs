@@ -1,0 +1,16 @@
+#!/bin/bash
+set -eux
+
+dnf install -y httpd
+systemctl enable --now httpd
+
+cat > /var/www/html/index.html <<HTML
+<!doctype html>
+<html>
+  <head><title>${page_title}</title></head>
+  <body>
+    <h1>${page_title}</h1>
+    <p>Provisioned with Terraform user data.</p>
+  </body>
+</html>
+HTML

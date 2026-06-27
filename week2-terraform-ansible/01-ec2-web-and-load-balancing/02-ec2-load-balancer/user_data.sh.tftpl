@@ -1,0 +1,16 @@
+#!/bin/bash
+set -eux
+
+dnf install -y httpd
+systemctl enable --now httpd
+
+cat > /var/www/html/index.html <<HTML
+<!doctype html>
+<html>
+  <head><title>${server_name}</title></head>
+  <body>
+    <h1>${server_name}</h1>
+    <p>This response came from ${server_name}.</p>
+  </body>
+</html>
+HTML

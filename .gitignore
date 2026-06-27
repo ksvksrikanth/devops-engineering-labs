@@ -1,0 +1,25 @@
+# Terraform generated files
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.lock.hcl
+
+# Local secrets and machine-specific values
+*.pem
+*.key
+terraform.tfvars
+*.auto.tfvars
+*.auto.tfvars.json
+
+# Editor and OS noise
+.idea/
+*.iml
+.DS_Store
+Thumbs.db

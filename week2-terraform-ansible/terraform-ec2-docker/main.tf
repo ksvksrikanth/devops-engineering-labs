@@ -78,7 +78,7 @@ resource "aws_iam_instance_profile" "docker_lab_profile" {
 
 resource "aws_instance" "docker_lab" {
   ami                    = data.aws_ami.ubuntu.id
-  instance_type          = "t3.micro"
+  instance_type          = var.instance_type
   iam_instance_profile   = aws_iam_instance_profile.docker_lab_profile.name
   key_name               = var.key_name
   vpc_security_group_ids = [aws_security_group.docker_lab_sg.id]

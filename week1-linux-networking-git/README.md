@@ -4,6 +4,9 @@ This README consolidates the successful commands and exercises captured during t
 
 ## Contents
 
+- [Basic Linux commands exercise](#basic-linux-commands-exercise)
+- [Git important commands exercise](#git-important-commands-exercise)
+- [Networking important commands exercise](#networking-important-commands-exercise)
 - [Process and resource monitoring](#process-and-resource-monitoring)
 - [Files and directories](#files-and-directories)
 - [Logs and troubleshooting](#logs-and-troubleshooting)
@@ -13,6 +16,44 @@ This README consolidates the successful commands and exercises captured during t
 - [SSH](#ssh)
 - [Environment variables and Bash](#environment-variables-and-bash)
 - [Practice exercises](#practice-exercises)
+
+## Basic Linux Commands Exercise
+
+See [basic-linux-commands-exercise.md](D:/DevOps-Learning/week1-linux-networking-git/basic-linux-commands-exercise.md) for a beginner command sequence covering:
+
+- Listing files and folders
+- Creating and checking a directory
+- Changing directories
+- Writing and reading `demo.txt`
+- Making `demo.txt` read-only with `chmod`
+- Using `sudo` and a root shell
+- Installing Git with `apt-get`
+- Viewing command history and clearing the terminal
+
+## Git Important Commands Exercise
+
+See [git-important-commands-exercise.md](D:/DevOps-Learning/week1-linux-networking-git/git-important-commands-exercise.md) for a focused Git practice lab covering:
+
+- Git version and global identity configuration
+- Repository initialization
+- `git status`, `git add`, `git commit`, and `git diff`
+- Commit history with `git log`
+- Branch creation, checkout, merge, and delete
+- Remote setup, clone, fetch, pull, and push
+- Safe local undo commands with `git restore`
+
+## Networking Important Commands Exercise
+
+See [networking-important-commands-exercise.md](D:/DevOps-Learning/week1-linux-networking-git/networking-important-commands-exercise.md) for a focused networking practice lab covering:
+
+- Hostname, IP address, and route inspection
+- Connectivity checks with `ping`
+- DNS checks with `nslookup`, `dig`, and `/etc/resolv.conf`
+- HTTP checks with `curl`
+- Listening ports and active connections with `ss`
+- Path tracing with `traceroute` and `tracepath`
+- Port checks with `nc`
+- Basic firewall inspection with `ufw`
 
 ## Process and resource monitoring
 

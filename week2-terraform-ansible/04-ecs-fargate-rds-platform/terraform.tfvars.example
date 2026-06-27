@@ -1,0 +1,5 @@
+aws_region      = "ap-south-1"
+stack_name      = "terraform-workshop"
+image_repo_name = "petclinic"
+task_family     = "petclinic"
+db_password     = "replace-with-a-strong-password"
