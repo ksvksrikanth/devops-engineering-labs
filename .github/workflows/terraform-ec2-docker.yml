@@ -18,7 +18,7 @@ permissions:
 
 env:
   AWS_REGION: ap-south-1
-  TERRAFORM_WORKING_DIR: week2-terraform-ansible/terraform-ec2-docker
+  TERRAFORM_WORKING_DIR: terraform/terraform-ec2-docker
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:

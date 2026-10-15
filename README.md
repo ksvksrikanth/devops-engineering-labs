@@ -1,22 +1,16 @@
-# DevOps-Learning
+# DevOps Engineering Labs
 
-A structured hands-on DevOps, Cloud, Kubernetes, CI/CD, Platform Engineering, AI-for-DevOps, and Interview Preparation learning repository.
+This is a place to practice the everyday work of a DevOps engineer: setting up systems, deploying applications, writing scripts, and figuring out why something broke.
 
-This repository is designed to:
-- Learn modern DevOps engineering deeply
-- Practice hands-on labs
-- Build troubleshooting mindset
-- Prepare for senior DevOps interviews
-- Understand enterprise architecture patterns
-- Learn CI/CD and deployment strategies
-- Learn Infrastructure as Code and GitOps
-- Build AI-assisted DevOps workflows
+The folders are organized by topic, so you can start with Linux and Git or jump straight into a lab you need. Some areas have working examples; others are placeholders for future notes and exercises. The roadmap below includes both.
+
+For a quick starting point, try the [Windows scripts](windows-powershell/README.md), [Linux scripts](linux-networking-git/scripts/README.md), or [shared Python tools](common-scripts/README.md). Each guide explains what to run and what to expect.
 
 ---
 
 # Learning Goals
 
-This repository will help cover:
+The main topics are:
 
 - Linux administration and troubleshooting
 - Networking fundamentals for DevOps
@@ -39,15 +33,15 @@ This repository will help cover:
 # Repository Structure
 
 ```text
-DevOps-Learning/
-├── week1-linux-networking-git/
-├── week2-terraform-ansible/
-├── week3-docker-kubernetes/
-├── week4-gitops/
-├── week5-cicd/
-├── week6-monitoring/
-├── week7-aws-ai/
-├── week8-revision/
+devops-engineering-labs/
+├── linux-networking-git/
+├── terraform/
+├── ansible/
+├── gitops/
+├── cicd/
+├── monitoring/
+├── aws-ai/
+├── revision/
 ├── windows-powershell/
 ├── architecture-notes/
 ├── interview-prep/
@@ -378,7 +372,7 @@ source ~/.bashrc
 
 # Learning Roadmap
 
-# Week 1 — Linux + Networking + Git
+# Linux + Networking + Git
 
 ## Linux
 - Process Management
@@ -414,7 +408,7 @@ source ~/.bashrc
 
 ---
 
-# Week 2 — Terraform + Ansible
+# Terraform
 
 ## Terraform
 - Modules
@@ -432,7 +426,11 @@ source ~/.bashrc
 - State locking
 - Drift detection
 
-## Ansible
+# Ansible
+
+Ansible exercises are kept separately in [ansible/](ansible/README.md).
+
+## Topics
 - Inventory
 - Playbooks
 - Roles
@@ -452,7 +450,9 @@ source ~/.bashrc
 
 ---
 
-# Week 3 — Docker + Kubernetes
+# Docker + Kubernetes
+
+Labs are now in [container-platform-labs](../container-platform-labs/README.md) at `D:\container-platform-labs`.
 
 ## Docker
 - Dockerfile Optimization
@@ -477,7 +477,7 @@ source ~/.bashrc
 
 ---
 
-# Week 4 — Kubernetes Advanced + GitOps
+# Kubernetes Advanced + GitOps
 
 ## Advanced Kubernetes
 - Scheduler
@@ -499,7 +499,7 @@ source ~/.bashrc
 
 ---
 
-# Week 5 — GitHub Actions + CI/CD
+# GitHub Actions + CI/CD
 
 ## GitHub Actions
 - Reusable Workflows
@@ -521,7 +521,7 @@ source ~/.bashrc
 
 ---
 
-# Week 6 — Monitoring + Observability + SRE
+# Monitoring + Observability + SRE
 
 ## Monitoring
 - Prometheus
@@ -543,7 +543,7 @@ source ~/.bashrc
 
 ---
 
-# Week 7 — AWS Architecture + AI for DevOps
+# AWS Architecture + AI for DevOps
 
 ## AWS
 - VPC
@@ -568,7 +568,7 @@ source ~/.bashrc
 
 ---
 
-# Week 8 — Revision + Mock Interviews
+# Revision + Mock Interviews
 
 ## Revision
 - Kubernetes
@@ -613,9 +613,9 @@ source ~/.bashrc
 
 ---
 
-# DevOps Best Practices Included
+# Practices to build into the labs
 
-Throughout the journey, the following best practices will be covered:
+As you work through the labs, pay attention to these habits:
 
 - Infrastructure as Code standards
 - CI/CD best practices
@@ -635,7 +635,7 @@ Throughout the journey, the following best practices will be covered:
 
 ---
 
-# Deployment Strategies Covered
+# Deployment strategies to practice
 
 - Rolling Updates
 - Blue-Green Deployments
@@ -647,7 +647,7 @@ Throughout the journey, the following best practices will be covered:
 
 ---
 
-# System Design Principles Included
+# System design topics
 
 - Scalability
 - High Availability
@@ -664,7 +664,7 @@ Throughout the journey, the following best practices will be covered:
 
 # Interview Preparation
 
-This repository also includes:
+Use the labs as a starting point for interview practice:
 
 - Mock Interviews
 - Scenario-based Questions
@@ -691,7 +691,7 @@ Document:
 - Commands
 - Observations
 - RCA notes
-- Architecture learnings
+- Architecture decisions and what you learned
 - Interview answers
 
 This becomes:
@@ -719,21 +719,24 @@ These tools will be used for:
 
 # Goal of This Repository
 
-The goal is not just to learn tools.
-
-The goal is to become:
-- a strong DevOps engineer,
-- a better troubleshooter,
-- a platform engineering thinker,
-- and an interview-ready senior engineer.
+The aim is to understand what you run, explain why it works, and know where to look when it fails. Keep notes on the mistakes and fixes along the way; those are useful both on the job and in interviews.
 
 ---
 
-# Status
+# Where to start
 
-✅ Environment Setup Completed
+The setup notes above describe the local environment used for these labs. Check the prerequisites on your own machine, then choose an exercise. If you are starting from scratch, Linux, networking, and Git are a good first stop.
 
-Next Step:
 
-🚀 Start Week 1 — Linux + Networking + Git
+## Basic DevOps automation
 
+- [Windows PowerShell scripts](windows-powershell/README.md): HTTP, Windows services, WinRM remote operations, and system health.
+- [Linux Bash scripts](linux-networking-git/scripts/README.md): HTTP, systemd services, SSH remote operations, and system health.
+
+## Common Windows and Linux automation
+
+See [cross-platform DevOps scripts](common-scripts/README.md) for disk alerts, HTTP/TCP health checks, log retention cleanup, CPU/RAM CSV metrics, environment/config validation, and timestamped ZIP backups. The guide includes setup steps, examples, and tests you can run locally.
+
+## Certificate updates
+
+Native PowerShell and Bash certificate update scripts. See the [certificate update guide](certificate-guide.md) for CA trust updates, TLS replacement, preview/apply commands, rollback behavior, and platform requirements. Start with the default preview to see what would change before applying an update.
